@@ -1,0 +1,7 @@
+name	title	route	published	content_type
+about-us	about-us	about	1	Page Builder
+contact-us	Contact_us	contact-us	1	Page Builder
+home	Home	home	1	Page Builder
+pricing	Pricing	pricing	1	Page Builder
+products	Products	all-products	1	Page Builder
+projects	Projects	projects	1	Page Builder

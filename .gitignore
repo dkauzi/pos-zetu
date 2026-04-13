@@ -1,1 +1,6 @@
-*.pyc\nsite_config.json\n*.log\npasswords.txt
+*.pyc
+site_config.json
+*.log
+passwords.txt
+__pycache__/
+*.env

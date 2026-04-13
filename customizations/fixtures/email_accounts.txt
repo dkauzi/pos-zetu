@@ -1,0 +1,6 @@
+name	email_id	smtp_server	smtp_port	login_id	use_tls	enable_outgoing
+Email Linking	email_linking@example.com	NULL	NULL	NULL	0	0
+Notifications Send	homezetu@homezetu.com	mail-eu.smtp2go.com	2525	homezetu.com	1	1
+Replies	replies@example.com	smtp.example.com	NULL	NULL	0	0
+Sales	sales@example.com	NULL	NULL	NULL	0	0
+Support	support@example.com	NULL	NULL	NULL	0	0
