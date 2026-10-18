@@ -3,17 +3,40 @@
 POS-Zetu Subscription Lifecycle Manager
 Runs daily via cron. Handles trial reminders, expiry, cleanup.
 """
-import sys, smtplib, subprocess
+import os, sys, smtplib, subprocess
 from datetime import date, timedelta
 from email.mime.text import MIMEText
 
+# Secrets live in /home/frappe/.poszetu.env (see poszetu.env.example), never in git.
+# Cron does not load that file, so read it here. Real environment variables win.
+ENV_FILE = os.environ.get('POSZETU_ENV', '/home/frappe/.poszetu.env')
+
+def load_env(path):
+    values = {}
+    try:
+        with open(path) as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith('#') or '=' not in line:
+                    continue
+                key, value = line.split('=', 1)
+                values[key.strip()] = value.strip().strip('"').strip("'")
+    except FileNotFoundError:
+        pass
+    values.update({k: v for k, v in os.environ.items() if k in values or k.startswith('SMTP_')})
+    return values
+
+_env = load_env(ENV_FILE)
+if not _env.get('SMTP_PASS'):
+    sys.exit(f'SMTP_PASS not set. Create {ENV_FILE} from poszetu.env.example.')
+
 # Config
-SMTP_HOST = 'mail-eu.smtp2go.com'
-SMTP_PORT = 2525
-SMTP_USER = 'homezetu.com'
-SMTP_PASS = 'NLaw4FzZALN9G0cl'
-FROM_EMAIL = 'homezetu@homezetu.com'
-ADMIN_EMAIL = 'dkarigi@gmail.com'
+SMTP_HOST = _env.get('SMTP_HOST', 'mail-eu.smtp2go.com')
+SMTP_PORT = int(_env.get('SMTP_PORT', '2525'))
+SMTP_USER = _env.get('SMTP_USER', 'homezetu.com')
+SMTP_PASS = _env['SMTP_PASS']
+FROM_EMAIL = _env.get('FROM_EMAIL', 'homezetu@homezetu.com')
+ADMIN_EMAIL = _env.get('ADMIN_EMAIL', 'dkarigi@gmail.com')
 SITE = 'pos.homezetu.com'
 BENCH = '/home/frappe/frappe-bench'
 
