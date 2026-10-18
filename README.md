@@ -11,6 +11,23 @@ Cloud POS system for Kenyan businesses built on ERPNext.
 - Bench path: /home/frappe/frappe-bench
 - Sites: pos.homezetu.com, staging-site
 
+## Secrets
+Passwords are never stored in this repo. On the server, create the secrets file once:
+```bash
+cp poszetu.env.example /home/frappe/.poszetu.env
+chown frappe:frappe /home/frappe/.poszetu.env && chmod 600 /home/frappe/.poszetu.env
+nano /home/frappe/.poszetu.env   # fill in SMTP_PASS and DB_ROOT_PASSWORD
+```
+`upgrade.sh` and `subscription_lifecycle.py` read it and refuse to run without it.
+
+## Upgrade (v15 patch releases only)
+```bash
+./scripts/upgrade.sh
+```
+Checks every site is up, refuses to run if frappe/erpnext are not on `version-15`
+or have local edits, backs up every site, runs `bench update`, and on failure
+rolls back both code and data. Take a droplet snapshot first.
+
 ## Onboard a New Client
 ```bash
 ./scripts/new_client.sh clientname
